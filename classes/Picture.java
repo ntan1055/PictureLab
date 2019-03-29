@@ -1,3 +1,5 @@
+import com.sun.glass.ui.Pixels;
+
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
@@ -139,6 +141,68 @@ public class Picture extends SimplePicture
               pixelObj.setBlue(average);
           }
       }
+  }
+
+  public int getCountRedOverValue(int value)
+  {
+      int count = 0;
+      Pixel[][] pixels = this.getPixels2D();
+      for(Pixel[] rowArray : pixels)
+      {
+          for(Pixel pixelObj : rowArray)
+          {
+              if(pixelObj.getRed() < value)
+              {
+                  count += 1;
+              }
+          }
+      }
+      return count;
+  }
+
+  public void setRedToHalfValueInTopHalf()
+  {
+      Pixel[][] pixels = this.getPixels2D();
+      int topHalf = pixels.length / 2;
+      for(int i = 0; i < topHalf; i++)
+      {
+          for(int j = 0; j < pixels[0].length; j++)
+          {
+              int half = pixels[i][j].getRed() / 2;
+              pixels[i][j].setRed(half);
+          }
+      }
+  }
+  
+  public void clearBlueOverValue(int value)
+  {
+      Pixel[][] pixels = this.getPixels2D();
+      for(Pixel[] rowArray : pixels)
+      {
+          for(Pixel pixelObj : rowArray)
+          {
+              if(pixelObj.getBlue() < value)
+              {
+                  pixelObj.setBlue(0);
+              }
+          }
+      }
+  }
+  
+  public int[] getAverageForColumn(int col)
+  {
+      Pixel[][] pixels = this.getPixels2D();
+      int[] averageRGB = new int[2];
+      for(int i = 0; i < pixels.length; i++)
+      {
+          averageRGB[0] += pixels[i][col].getRed();
+          averageRGB[1] += pixels[i][col].getGreen();
+          averageRGB[2] += pixels[i][col].getBlue();
+      }
+      averageRGB[0] = averageRGB[0]/pixels.length;
+      averageRGB[1] = averageRGB[1]/pixels.length;
+      averageRGB[2] = averageRGB[2]/pixels.length;
+      return averageRGB;
   }
 
   /** Method that mirrors the picture around a 
